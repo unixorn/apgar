@@ -41,7 +41,13 @@ var documentRoot string
 var healthCheckName string
 var healthCheckTree string
 var healthy bool
-var testsGroup sync.WaitGroup
+
+type Walker struct {
+	documentRoot    string
+	healthCheckName string
+	healthCheckTree string
+	waitGroup       sync.WaitGroup
+}
 
 func isDir(path string) bool {
 	s, err := os.Stat(path)
@@ -61,7 +67,7 @@ func isExecutable(path string) bool {
 
 func printError(err error) {
 	if err != nil {
-		os.Stderr.WriteString(fmt.Sprintf("==> Error: %s\n", err.Error()))
+		os.Stdout.WriteString(fmt.Sprintf("==> Error: %s\n", err.Error()))
 	}
 }
 
@@ -92,13 +98,20 @@ func runHealthCheck(wg *sync.WaitGroup, path string) {
 	wg.Done()
 }
 
-func visit(path string, f os.FileInfo, err error) error {
+func (w *Walker) visit(path string, fi os.FileInfo, err error) error {
 	if debug > 0 {
-		fmt.Printf("\nchecking %s\n", path)
+		fmt.Printf("\nchecking %s for %s\n", path, w.healthCheckName)
+		fmt.Printf("w.waitGroup: %v\n", w.waitGroup)
+		fmt.Printf("&w.waitGroup: %s\n", &w.waitGroup)
 	}
-	if filepath.Base(path) == healthCheckName {
-		testsGroup.Add(1)
-		go runHealthCheck(&testsGroup, path)
+	if filepath.Base(path) == w.healthCheckName {
+		w.waitGroup.Add(1)
+		if debug > 0 {
+			fmt.Printf("\n\npost add\n")
+			fmt.Printf("w.waitGroup: %v\n", w.waitGroup)
+			fmt.Printf("&w.waitGroup: %s\n", &w.waitGroup)
+		}
+		go runHealthCheck(&w.waitGroup, path)
 	}
 	return nil
 }
@@ -106,7 +119,7 @@ func visit(path string, f os.FileInfo, err error) error {
 func write_health_status(path string, healthy bool) error {
 	var statusString string
 
-	healthFilePath := fmt.Sprintf("%v/status.txt", path)
+	healthFilePath := fmt.Sprintf("%v/status", path)
 	if debug >= 0 {
 		fmt.Printf("status path: %s\n", healthFilePath)
 		fmt.Printf("Health: %v\n", healthy)
@@ -129,6 +142,7 @@ func write_health_status(path string, healthy bool) error {
 func debugDump() {
 	fmt.Println("Apgar Settings:")
 	fmt.Println("***************")
+	fmt.Printf("debug: %v\n", debug)
 	fmt.Printf("documentRoot: %v\n", documentRoot)
 	fmt.Printf("healthCheckName: %v\n", healthCheckName)
 	fmt.Printf("healthCheckTree: %v\n", healthCheckTree)
@@ -147,11 +161,21 @@ func main() {
 		debugDump()
 	}
 	healthy = true
-	err := filepath.Walk(healthCheckTree, visit)
-	testsGroup.Wait()
+	var tGroup sync.WaitGroup
+
+	w := &Walker{
+		documentRoot:    documentRoot,
+		healthCheckName: healthCheckName,
+		waitGroup:       tGroup,
+	}
+	fmt.Printf("w: %#v\n", w)
+	err := filepath.Walk(healthCheckTree, w.visit)
+
+	w.waitGroup.Wait()
 	if debug > 40 {
 		fmt.Printf("filepath.Walk() returned %v\n", err)
 	}
+
 	fmt.Printf("Health Status: %v\n", healthy)
 	write_health_status(documentRoot, healthy)
 	if healthy == true {
