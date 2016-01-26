@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#
+# Failing healthCheck script
+#
+# Copyright 2016, DAQRI, LLC.
+
+set -o pipefail
+
+echo "NOT OK"
+exit 1

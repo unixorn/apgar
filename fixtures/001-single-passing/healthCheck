@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#
+# Passing healthCheck script
+#
+# Copyright 2016, DAQRI, LLC.
+
+set -o pipefail
+
+randsleep 5
+echo "OK"
+exit 0
