@@ -2,9 +2,26 @@ GEM
   remote: https://rubygems.org/
   specs:
     ansi (1.5.0)
+    arr-pm (0.0.10)
+      cabin (> 0)
+    backports (3.6.8)
     builder (3.2.2)
-    minitest (5.8.3)
-    minitest-reporters (1.1.7)
+    cabin (0.8.1)
+    childprocess (0.5.9)
+      ffi (~> 1.0, >= 1.0.11)
+    clamp (0.6.5)
+    ffi (1.9.10)
+    fpm (1.4.0)
+      arr-pm (~> 0.0.10)
+      backports (>= 2.6.2)
+      cabin (>= 0.6.0)
+      childprocess
+      clamp (~> 0.6)
+      ffi
+      json (>= 1.7.7)
+    json (1.8.3)
+    minitest (5.8.4)
+    minitest-reporters (1.1.8)
       ansi
       builder
       minitest (>= 5.0)
@@ -15,6 +32,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  fpm
   minitest-reporters
 
 BUNDLED WITH
