@@ -27,9 +27,14 @@ task :usage do
   puts "You must gem install fpm to build deb or rpm files."
 end
 
+desc "Install required gems"
+task :bundle_install do
+  sh %{ bundle install }
+end
+
 desc "Package apgar as a DEB"
-task :deb => [:fakeroot, :apgar_binaries] do
-  sh %{ fpm -s dir -t deb -n apgar \
+task :deb => [:fakeroot, :apgar_binaries, :bundle_install] do
+  sh %{ bundle exec fpm -s dir -t deb -n apgar \
     -v #{SEMVER} --iteration #{iteration} \
     --url #{PACKAGE_URL} \
     --description "#{PACKAGE_DESCRIPTION}" \
@@ -39,8 +44,8 @@ end
 task :apgar_binaries => [:apgar_probe, :apgar_server]
 
 desc "Package apgar as a RPM"
-task :rpm => [:fakeroot, :apgar_binaries] do
-  sh %{ fpm -s dir -t rpm -n apgar \
+task :rpm => [:fakeroot, :apgar_binaries, :bundle_install] do
+  sh %{ bundle exec fpm -s dir -t rpm -n apgar \
     -v #{SEMVER} --iteration #{iteration} \
     --url #{PACKAGE_URL} \
     --description "${PACKAGE_DESCRIPTION}" \
@@ -74,7 +79,7 @@ task :cleanup do
 end
 
 desc "Run test suite"
-task :test => [:apgar_binaries, :test_setup] do
+task :test => [:apgar_binaries, :test_setup, :bundle_install] do
   sh %{ bundle exec ./apgar_tests.rb }
 end
 
