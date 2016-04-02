@@ -4,7 +4,7 @@ We wanted a quick, simple and standardized way of doing health checks for the va
 
 ## Details
 
-Apgar consists of two parts, apgar-server which serves the health information, and apgar-probe which collects & aggregates the individual server health checks.
+Apgar consists of two parts, `apgar-server` which serves the health information, and `apgar-probe` which collects & aggregates the individual server health checks.
 
 
 # FAQ
@@ -17,8 +17,12 @@ Why not Apgar? Virginia Apgar invented the Apgar score as a method to quickly su
 
 * I don't want to have to maintain configuration files for every webserver out there
 * Not every system has a webserver installed
-* Using a standalone server helps minimize Apgar's impact on existing services. The apgar-server component is written in golang so that it doesn't pull in any dependencies that might conflict with those needed by the services you actually care about on the system.
+* Using a standalone server helps minimize Apgar's impact on existing services. Both apgar-server and apgar-probe are written in golang so that using Apgar doesn't pull in any dependencies that might conflict with those needed by the services you actually care about on a system.
 
 ## Why Go
 
 I wanted Apgar to have as little impact on the host system as possible. Go gives us static binaries, and it was a good excuse to start learning Go.
+
+## How can I package this so I don't have to build it on every server?
+
+If you have bundler installed, `rake deb` will build a deb, and `rake rpm` will build a rpm.
