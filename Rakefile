@@ -38,7 +38,7 @@ task :deb => [:fakeroot, :apgar_binaries, :bundle_install] do
     -v #{SEMVER} --iteration #{iteration} \
     --url #{PACKAGE_URL} \
     --description "#{PACKAGE_DESCRIPTION}" \
-    -C .fakeroot --license "Public Domain" usr }
+    -C .fakeroot --license "Public Domain" etc usr var }
 end
 
 task :apgar_binaries => [:apgar_probe, :apgar_server]
@@ -49,12 +49,14 @@ task :rpm => [:fakeroot, :apgar_binaries, :bundle_install] do
     -v #{SEMVER} --iteration #{iteration} \
     --url #{PACKAGE_URL} \
     --description "${PACKAGE_DESCRIPTION}" \
-    -C .fakeroot --license "MIT" usr }
+    -C .fakeroot --license "MIT" etc usr var }
 end
 
 task :fakeroot => [:apgar_binaries] do
   sh %{ rm -fr .fakeroot }
+  FileUtils::mkdir_p '.fakeroot/etc/apgar/healthchecks'
   FileUtils::mkdir_p '.fakeroot/usr/local/sbin'
+  FileUtils::mkdir_p '.fakeroot/var/lib/apgar'
   sh %{ cp apgar-probe apgar-server .fakeroot/usr/local/sbin}
   sh %{ sudo chown -R root:#{INSTALL_GROUP} .fakeroot }
 end
