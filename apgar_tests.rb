@@ -50,4 +50,18 @@ class TestApgarProbe < MiniTest::Test
     assert_equal "OK\n", File.open(STATUS_FILE) { |file| file.read }
   end
 
+  def test_suffix_passing
+    run = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/005-suffix-passes`
+    exitcode = $?.to_i
+    assert_equal true, (exitcode == 0)
+    assert_equal "OK\n", File.open(STATUS_FILE) { |file| file.read }
+  end
+
+  def test_suffix_failing
+    run = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/006-suffix-fails`
+    exitcode = $?.to_i
+    assert_equal false, (exitcode == 0)
+    assert_equal "UNHEALTHY\n", File.open(STATUS_FILE) { |file| file.read }
+  end
+
 end
