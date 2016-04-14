@@ -31,6 +31,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"sync"
 	"syscall"
 )
@@ -83,7 +84,7 @@ func runHealthCheck(wg *sync.WaitGroup, path string) {
 	var waitStatus syscall.WaitStatus
 	if err := cmd.Run(); err != nil {
 		printError(err)
-		// Did the command fail because of an unsuccessful exit code
+		// Did the command fail because of an unsuccessful exit code?
 		if exitError, ok := err.(*exec.ExitError); ok {
 			waitStatus = exitError.Sys().(syscall.WaitStatus)
 			fmt.Printf("%v: %d\n", path, waitStatus.ExitStatus())
@@ -104,7 +105,7 @@ func (w *Walker) visit(path string, fi os.FileInfo, err error) error {
 		fmt.Printf("w.waitGroup: %v\n", w.waitGroup)
 		fmt.Printf("&w.waitGroup: %s\n", &w.waitGroup)
 	}
-	if filepath.Base(path) == w.healthCheckName {
+	if strings.HasSuffix(filepath.Base(path), w.healthCheckName) {
 		w.waitGroup.Add(1)
 		if debug > 0 {
 			fmt.Printf("\n\npost add\n")
@@ -152,7 +153,7 @@ func debugDump() {
 func main() {
 	flag.IntVar(&debug, "debug", 0, "Debug level")
 	flag.StringVar(&documentRoot, "document-root", "/var/lib/apgar", "Document root")
-	flag.StringVar(&healthCheckName, "healthcheck-name", "healthCheck", "health check script name")
+	flag.StringVar(&healthCheckName, "healthcheck-name", "healthCheck", "health check script suffix")
 	flag.StringVar(&healthCheckTree, "healthcheck-tree", "/var/lib/apgar", "Directory tree to search for health checks")
 
 	flag.Parse()

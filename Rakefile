@@ -97,6 +97,6 @@ task :v => [:verbose_test]
 desc "Verbose test"
 task :verbose_test => [:apgar_probe] do
   sh %{ echo ziggy > tmp/status }
-  system("./apgar-probe --debug 50 --document-root tmp --healthcheck-tree fixtures/004-multiple-failing")
+  system("./apgar-probe --debug 50 --document-root tmp --healthcheck-tree fixtures/005-suffix-passes")
   system("cat tmp/status")
 end
