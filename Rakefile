@@ -53,7 +53,7 @@ task :rpm => [:fakeroot, :apgar_binaries, :bundle_install] do
 end
 
 task :fakeroot => [:apgar_binaries] do
-  sh %{ rm -fr .fakeroot }
+  sh %{ sudo rm -fr .fakeroot }
   FileUtils::mkdir_p '.fakeroot/etc/apgar/healthchecks'
   FileUtils::mkdir_p '.fakeroot/usr/local/sbin'
   FileUtils::mkdir_p '.fakeroot/var/lib/apgar'
@@ -95,7 +95,7 @@ task :t => [:test]
 task :v => [:verbose_test]
 
 desc "Verbose test"
-task :verbose_test => [:apgar_probe] do
+task :verbose_test => [:apgar_probe, :test_setup] do
   sh %{ echo ziggy > tmp/status }
   system("./apgar-probe --debug 50 --document-root tmp --healthcheck-tree fixtures/005-suffix-passes")
   system("cat tmp/status")
