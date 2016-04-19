@@ -6,6 +6,14 @@ We wanted a quick, simple and standardized way of doing health checks for the va
 
 Apgar consists of two parts, `apgar-server` which serves the health information, and `apgar-probe` which collects & aggregates the individual server health checks.
 
+# Writing Checks
+
+An apgar check should be executable, with a shebang line. It should either write "OK" to console and return 0, or write "NOT OK" to console and return anything other than 0.
+
+The check should never print anything else unless --verbose is passed on the command line. If called with --quiet, it may print nothing at all, but still return zero or non-zero.
+
+These checks should be fast and non-destructive - running them any number of times must be fine.
+
 # FAQ
 
 ## Why Apgar?
