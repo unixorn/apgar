@@ -42,6 +42,7 @@ var documentRoot string
 var healthCheckName string
 var healthCheckTree string
 var healthy bool
+var healthyResponse string
 
 type Walker struct {
 	documentRoot    string
@@ -129,7 +130,7 @@ func write_health_status(path string, healthy bool) error {
 	healthFile, err := os.Create(healthFilePath)
 	errorCheck(err)
 	if healthy {
-		statusString = "OK\n"
+		statusString = healthyResponse
 	} else {
 		statusString = "UNHEALTHY\n"
 	}
@@ -155,6 +156,7 @@ func main() {
 	flag.StringVar(&documentRoot, "document-root", "/var/lib/apgar", "Document root")
 	flag.StringVar(&healthCheckName, "healthcheck-name", "healthCheck", "health check script suffix")
 	flag.StringVar(&healthCheckTree, "healthcheck-tree", "/var/lib/apgar", "Directory tree to search for health checks")
+	flag.StringVar(&healthyResponse, "healthy-response", "200 OK\n", "The response string if status is healthy")
 
 	flag.Parse()
 
