@@ -65,7 +65,7 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
     w.WriteHeader(http.StatusOK)
     w.Write([]byte("HEALTHY\n"))
   } else {
-    w.WriteHeader(http.StatusNotAcceptable)
+    w.WriteHeader(http.StatusInternalServerError)
     w.Write([]byte("UNHEALTHY\n"))
   }
 }
