@@ -32,40 +32,40 @@
 package main
 
 import (
-  "fmt"
+	"fmt"
+	"io/ioutil"
 	"net/http"
-  "io/ioutil"
-  "strings"
+	"strings"
 )
 
 func main() {
-  http.HandleFunc("/status", healthCheck)
-  panic(http.ListenAndServe(":9000", nil))
+	http.HandleFunc("/status", healthCheck)
+	panic(http.ListenAndServe(":9000", nil))
 }
 
 // Our healthcheck is location in /var/lib/apgar/status
 // Validate that we are healthy, set proper http response if not
 func healthCheck(w http.ResponseWriter, r *http.Request) {
-  var healthy bool
+	var healthy bool
 
-  b, err := ioutil.ReadFile("/var/lib/apgar/status")
+	b, err := ioutil.ReadFile("/var/lib/apgar/status")
 
-  // If error (such as file not found), report unhealthy
-  if err != nil {
-    fmt.Println(err)
-    healthy = false
-  } else {
-    s := string(b)
-    healthy = !strings.Contains(s, "UNHEALTHY")
-  }
+	// If error (such as file not found), report unhealthy
+	if err != nil {
+		fmt.Println(err)
+		healthy = false
+	} else {
+		s := string(b)
+		healthy = !strings.Contains(s, "UNHEALTHY")
+	}
 
-  w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Content-Type", "text/plain")
 
-  if healthy {
-    w.WriteHeader(http.StatusOK)
-    w.Write([]byte("HEALTHY\n"))
-  } else {
-    w.WriteHeader(http.StatusInternalServerError)
-    w.Write([]byte("UNHEALTHY\n"))
-  }
+	if healthy {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("HEALTHY\n"))
+	} else {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("UNHEALTHY\n"))
+	}
 }
