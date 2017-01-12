@@ -77,8 +77,10 @@ desc "Cleanup after build"
 task :cleanup do
   sh %{ find . -name '*.o' -exec rm '{}' ';' }
   sh %{ find . -name '*.un~' -exec rm '{}' ';' }
-  sh %{ find ./test/reports -name '*.xml' -exec rm '{}' ';' }
   sh %{ rm -fr .fakeroot apgar-probe apgar-server tmp *.deb }
+  if File.directory?('./test/reports')
+    sh %{ find ./test/reports -name '*.xml' -exec rm '{}' ';' }
+  end
 end
 
 desc "Run test suite"
