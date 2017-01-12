@@ -53,12 +53,11 @@ task :rpm => [:fakeroot, :apgar_binaries, :bundle_install] do
 end
 
 task :fakeroot => [:apgar_binaries] do
-  sh %{ sudo rm -fr .fakeroot }
+  sh %{ rm -fr .fakeroot }
   FileUtils::mkdir_p '.fakeroot/etc/apgar/healthchecks'
   FileUtils::mkdir_p '.fakeroot/usr/local/sbin'
   FileUtils::mkdir_p '.fakeroot/var/lib/apgar'
   sh %{ cp apgar-probe apgar-server .fakeroot/usr/local/sbin}
-  sh %{ sudo chown -R root:#{INSTALL_GROUP} .fakeroot }
 end
 
 task :apgar_probe do
