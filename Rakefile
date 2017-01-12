@@ -75,8 +75,10 @@ end
 
 desc "Cleanup after build"
 task :cleanup do
-  sh %{ find . -name '*.un~' '*.o' -exec rm '{}' ';' }
-  sh %{ rm -fr .fakeroot apgar-probe apgar-server tmp }
+  sh %{ find . -name '*.o' -exec rm '{}' ';' }
+  sh %{ find . -name '*.un~' -exec rm '{}' ';' }
+  sh %{ find ./test/reports -name '*.xml' -exec rm '{}' ';' }
+  sh %{ rm -fr .fakeroot apgar-probe apgar-server tmp *.deb }
 end
 
 desc "Run test suite"
@@ -89,6 +91,7 @@ task :fmt do
   sh %{ go fmt *.go }
 end
 
+task :c => [:cleanup]
 task :f => [:fmt]
 task :t => [:test]
 task :v => [:verbose_test]
