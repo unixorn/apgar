@@ -1,6 +1,6 @@
-# Apgar Design Goals
+# Apgar
 
-We wanted a quick, simple and standardized way of doing health checks for the various services in our environment. Apgar walks a directory tree (by default `/etc/apgar/healthchecks`), runs the healthCheck scripts it finds there and aggregates the results into a directory (`/var/lib/apgar` by default). That directory is then served by a simple standalone web server so the results can be used as health checks by Amazon Load Balancers and Auto Scaling Groups.
+We wanted a quick, simple and standardized way of doing health checks for the various services in our environment. Apgar walks a directory tree (by default `/etc/apgar/healthchecks`), runs the healthCheck scripts it finds there (in parallel, to keep the run time as short as possible) and aggregates the results into a directory (`/var/lib/apgar` by default). That directory is then served by a simple standalone web server so the results can be used as health checks by Amazon Load Balancers and Auto Scaling Groups.
 
 ## Details
 
@@ -8,11 +8,16 @@ Apgar consists of two parts, `apgar-server` which serves the health information,
 
 # Writing Checks
 
-An apgar check should be executable, with a shebang line. It should either write "OK" to console and return 0, or write "NOT OK" to console and return anything other than 0.
+An apgar check should be:
 
-The check should never print anything else unless --verbose is passed on the command line. If called with --quiet, it may print nothing at all, but still return zero or non-zero.
-
-These checks should be fast and non-destructive - running them any number of times must be fine.
+* Executable, with a shebang line.
+* It should either write "OK" to console and return 0, or write "NOT OK" to console and return anything other than 0.
+* It must be named with a '.healthCheck' suffix
+* The check should never print anything else unless --verbose is passed on the command line. If called with --quiet, it may print nothing at all, but still return zero or non-zero.
+* Check scripts _must not assume that they will be run in a particular order_, or that other check scripts will *not* be running simultaneously with them. To minimize check time, Apgar runs the check scripts in parallel as soon as it finds them.
+* Checks should be fast - since apgar will run all the checks in parallel, it is better to have 3 separate tests that each run in N seconds than one test that runs in 3N seconds.
+* Checks should be idempotent
+* Checks must be non-destructive and not change the state of the underlying service - by definition, they will be run while the service they're checking is in production.
 
 # FAQ
 
