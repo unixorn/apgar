@@ -1,5 +1,11 @@
 # Apgar
 
+[![GitHub stars](https://img.shields.io/github/stars/unixorn/apgar.svg)](https://github.com/unixorn/apgar/stargazers)
+[![Code Climate](https://codeclimate.com/github/unixorn/apgar/badges/gpa.svg)](https://codeclimate.com/github/unixorn/apgar)
+[![Issue Count](https://codeclimate.com/github/unixorn/apgar/badges/issue_count.svg)](https://codeclimate.com/github/unixorn/apgar)
+
+# Design Goals
+
 We wanted a quick, simple and standardized way of doing health checks for the various services in our environment. Apgar walks a directory tree (by default `/etc/apgar/healthchecks`), runs the healthCheck scripts it finds there (in parallel, to keep the run time as short as possible) and aggregates the results into a directory (`/var/lib/apgar` by default). That directory is then served by a simple standalone web server so the results can be used as health checks by Amazon Load Balancers and Auto Scaling Groups.
 
 ## Details
