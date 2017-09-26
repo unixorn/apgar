@@ -6,7 +6,11 @@
 
 # Design Goals
 
-We wanted a quick, simple and standardized way of doing health checks for the various services in our environment. Apgar walks a directory tree (by default `/etc/apgar/healthchecks`), runs the healthCheck scripts it finds there (in parallel, to keep the run time as short as possible) and aggregates the results into a directory (`/var/lib/apgar` by default). That directory is then served by a simple standalone web server so the results can be used as health checks by Amazon Load Balancers and Auto Scaling Groups.
+We wanted a quick, simple and standardized way of doing health checks for the various services in our environment.
+
+Apgar walks a directory tree (by default `/etc/apgar/healthchecks`), runs the healthCheck scripts it finds there in parallel, to keep the run time as short as possible, and aggregates the results into a directory (`/var/lib/apgar` by default).
+
+The status directory is then served by a simple standalone web server so the results can be used as health checks by Amazon Load Balancers and Auto Scaling Groups.
 
 ## Details
 
@@ -19,9 +23,9 @@ Apgar consists of two parts, `apgar-server` which serves the health information,
 An apgar health check must be:
 
 * Executable, with a shebang line.
-* It should either write "OK" to console _and_ return 0, or write "NOT OK" to console _and_ return anything other than 0.
-* It must be named with a '.healthCheck' suffix
-* The check should never print anything else unless --verbose is passed on the command line. If called with --quiet, it may print nothing at all, but still return zero or non-zero.
+* It should either write "OK" to console _and_ return 0, or write "NOT OK" to console _and_ return anything other than 0. Note that `apgar` relies on the exit code of the check to determine OK/FAIL, _not_ any text output of the health check script.
+* It must be named with a **.healthCheck** suffix
+* The check should never print anything else unless _--verbose_ is passed on the command line. If called with _--quiet_, it may print nothing at all, but _must still return zero or non-zero._
 * Check scripts _must not assume that they will be run in a particular order_, or that other check scripts will *not* be running simultaneously with them. To minimize check time, Apgar runs the check scripts in parallel as soon as it finds them.
 * Checks should be fast - since apgar will run all the checks in parallel, it is better to have 3 separate tests that each run in N seconds than one test that runs in 3N seconds.
 * Checks should be idempotent
@@ -35,13 +39,13 @@ Virginia Apgar invented the Apgar score as a method to quickly summarize the hea
 
 ## Can I run one test at a time?
 
-No. Apgar is designed to run all the health check scripts it finds in parallel. This allows it to fail the health check as fast as possible - the longest time that Apgar will take to report a failed health check is the time it takes to run the slowest health check script, so you should try to break up your check scripts into small scripts that each check one aspect of your service instead of large scripts that test multiple parts of your services.
+No. Apgar is designed to run all the health check scripts it finds in parallel. This allows it to fail the health check as fast as possible - the longest time that Apgar will take to report a failed health check is the time it takes to run the slowest health check script. You should break up your check scripts into small scripts that each check one aspect of your service instead of large scripts that test multiple parts of your services.
 
 ## My scripts have to be run in a particular order, how do I specify that?
 
-You can't. The current work around is to have a single large check script that runs multiple tests in the order you want, but that will slow down the apgar run.
+You don't. The current work around is to have a single large check script that runs multiple tests in the order you want, but that will slow down the apgar run.
 
-## Why not just piggyback on a system's existing web server?
+## Why do you run your own web server instead of piggybacking on a system's existing web server?
 
 You are of course free to use your own webserver instead of `apgar-server`, but we opted for a stand-alone server for the following reasons:
 
