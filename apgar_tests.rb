@@ -30,35 +30,35 @@ class TestApgarProbe < MiniTest::Test
   end
 
   def test_multiple_passing
-    run = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/003-multiple-passing`
+    _ = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/003-multiple-passing`
     exitcode = $?.to_i
     assert_equal true, (exitcode == 0)
     assert_equal "200 OK\n", File.open(STATUS_FILE) { |file| file.read }
   end
 
   def test_single_failing
-    run = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/002-single-failing`
+    _ = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/002-single-failing`
     exitcode = $?.to_i
     assert_equal false, (exitcode == 0)
     assert_equal "UNHEALTHY\n", File.open(STATUS_FILE) { |file| file.read }
   end
 
   def test_single_passing
-    run = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/001-single-passing`
+    _ = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/001-single-passing`
     exitcode = $?.to_i
     assert_equal true, (exitcode == 0)
     assert_equal "200 OK\n", File.open(STATUS_FILE) { |file| file.read }
   end
 
   def test_suffix_passing
-    run = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/005-suffix-passes`
+    _ = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/005-suffix-passes`
     exitcode = $?.to_i
     assert_equal true, (exitcode == 0)
     assert_equal "200 OK\n", File.open(STATUS_FILE) { |file| file.read }
   end
 
   def test_suffix_failing
-    run = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/006-suffix-fails`
+    _ = `./apgar-probe --document-root tmp --healthcheck-tree fixtures/006-suffix-fails`
     exitcode = $?.to_i
     assert_equal false, (exitcode == 0)
     assert_equal "UNHEALTHY\n", File.open(STATUS_FILE) { |file| file.read }
