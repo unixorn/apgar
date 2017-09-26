@@ -3,8 +3,8 @@
 // Author: Joe Block <joe.block@daqri.com>
 //
 // Extremely minimalist http server to serve health check status. We don't
-// need or want any fancy url rewriting, cgis, just to serve up a couple of
-// text files.
+// need or want any fancy url rewriting, cgis, just to serve up a directory
+// of text files.
 //
 // The MIT License (MIT)
 //
@@ -43,7 +43,7 @@ func main() {
 	panic(http.ListenAndServe(":9000", nil))
 }
 
-// Our healthcheck is location in /var/lib/apgar/status
+// Our healthcheck status is stored in /var/lib/apgar/status
 // Validate that we are healthy, set proper http response if not
 func healthCheck(w http.ResponseWriter, r *http.Request) {
 	var healthy bool
