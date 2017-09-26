@@ -35,10 +35,10 @@ end
 desc "Package apgar as a DEB"
 task :deb => [:fakeroot, :apgar_binaries, :bundle_install] do
   sh %{ bundle exec fpm -s dir -t deb -n apgar \
-    -v #{SEMVER} --iteration #{iteration} \
+    -v #{SEMVER}.#{iteration} --iteration #{iteration} \
     --url #{PACKAGE_URL} \
     --description "#{PACKAGE_DESCRIPTION}" \
-    -C .fakeroot --license "Public Domain" etc usr var }
+    -C .fakeroot --license "MIT" etc usr var }
 end
 
 task :apgar_binaries => [:apgar_probe, :apgar_server]
