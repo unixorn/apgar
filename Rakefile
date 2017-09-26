@@ -48,7 +48,7 @@ task :rpm => [:fakeroot, :apgar_binaries, :bundle_install] do
   sh %{ bundle exec fpm -s dir -t rpm -n apgar \
     -v #{SEMVER} --iteration #{iteration} \
     --url #{PACKAGE_URL} \
-    --description "${PACKAGE_DESCRIPTION}" \
+    --description "#{PACKAGE_DESCRIPTION}" \
     -C .fakeroot --license "MIT" etc usr var }
 end
 
