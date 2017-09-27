@@ -43,9 +43,9 @@ import (
 func main() {
 	raw := os.Getpid()
 	myPid := []byte(strconv.Itoa(raw))
-	err := ioutil.WriteFile("/var/run/apgar.pid", myPid, 0644)
+	err := ioutil.WriteFile("/var/run/apgar-server.pid", myPid, 0644)
 	if err != nil {
-		fmt.Println("Could not write /var/run/apgar.pid:", err)
+		fmt.Println("Could not write /var/run/apgar-server.pid:", err)
 	}
 	http.HandleFunc("/status", healthCheck)
 	http.HandleFunc("/", baseHandler)
