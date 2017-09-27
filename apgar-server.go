@@ -35,12 +35,38 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
 )
 
 func main() {
+	raw := os.Getpid()
+	myPid := []byte(strconv.Itoa(raw))
+	err := ioutil.WriteFile("/var/run/apgar-server.pid", myPid, 0644)
+	if err != nil {
+		fmt.Println("Could not write /var/run/apgar-server.pid:", err)
+	}
 	http.HandleFunc("/status", healthCheck)
-	panic(http.ListenAndServe(":9000", nil))
+	http.HandleFunc("/", baseHandler)
+	http.ListenAndServe(":9000", nil)
+}
+
+// Handy to allow our services to display scrapable data by writing to
+// /var/lib/apgar/foo
+func baseHandler(w http.ResponseWriter, r *http.Request) {
+	fileName := fmt.Sprintf("/var/lib/apgar%s", r.URL)
+	data, err := ioutil.ReadFile(fileName)
+
+	w.Header().Set("Content-Type", "text/plain")
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintf("%s", err)))
+	} else {
+		w.WriteHeader(http.StatusOK)
+		w.Write(data)
+	}
 }
 
 // Our healthcheck status is stored in /var/lib/apgar/status
