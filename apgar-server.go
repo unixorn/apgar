@@ -49,7 +49,7 @@ func main() {
 	}
 	http.HandleFunc("/status", healthCheck)
 	http.HandleFunc("/", baseHandler)
-	panic(http.ListenAndServe(":9000", nil))
+	http.ListenAndServe(":9000", nil)
 }
 
 // Handy to allow our services to display scrapable data by writing to
@@ -57,9 +57,6 @@ func main() {
 func baseHandler(w http.ResponseWriter, r *http.Request) {
 	fileName := fmt.Sprintf("/var/lib/apgar%s", r.URL)
 	data, err := ioutil.ReadFile(fileName)
-	if err != nil {
-		fmt.Println("Could not read ", fileName, err)
-	}
 
 	w.Header().Set("Content-Type", "text/plain")
 
