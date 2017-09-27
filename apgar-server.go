@@ -35,10 +35,18 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
 )
 
 func main() {
+	raw := os.Getpid()
+	myPid := []byte(strconv.Itoa(raw))
+	err := ioutil.WriteFile("/var/run/apgar.pid", myPid, 0644)
+	if err != nil {
+		fmt.Println("Could not write /var/run/apgar.pid:", err)
+	}
 	http.HandleFunc("/status", healthCheck)
 	panic(http.ListenAndServe(":9000", nil))
 }
