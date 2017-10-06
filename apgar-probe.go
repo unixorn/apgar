@@ -155,7 +155,7 @@ func main() {
 	flag.IntVar(&debug, "debug", 0, "Debug level")
 	flag.StringVar(&documentRoot, "document-root", "/var/lib/apgar", "Document root")
 	flag.StringVar(&healthCheckName, "healthcheck-name", "healthCheck", "health check script suffix")
-	flag.StringVar(&healthCheckTree, "healthcheck-tree", "/var/lib/apgar", "Directory tree to search for health checks")
+	flag.StringVar(&healthCheckTree, "healthcheck-tree", "/etc/apgar/healthchecks", "Directory tree to search for health checks")
 	flag.StringVar(&healthyResponse, "healthy-response", "200 OK\n", "The response string if status is healthy")
 
 	flag.Parse()
