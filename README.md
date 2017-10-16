@@ -1,5 +1,6 @@
 # Apgar
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/unixorn/apgar.svg)](https://github.com/unixorn/apgar/stargazers)
 [![Code Climate](https://codeclimate.com/github/unixorn/apgar/badges/gpa.svg)](https://codeclimate.com/github/unixorn/apgar)
 [![Issue Count](https://codeclimate.com/github/unixorn/apgar/badges/issue_count.svg)](https://codeclimate.com/github/unixorn/apgar)
