@@ -26,9 +26,9 @@ An apgar health check must be:
 * Executable, with a shebang line.
 * It should either write "OK" to console _and_ return 0, or write "NOT OK" to console _and_ return anything other than 0. Note that `apgar` relies on the exit code of the check to determine OK/FAIL, _not_ any text output of the health check script.
 * It must be named with a **.healthCheck** suffix
-* The check should never print anything else unless _--verbose_ is passed on the command line. If called with _--quiet_, it may print nothing at all, but _must still return zero or non-zero._
-* Check scripts _must not assume that they will be run in a particular order_, or that other check scripts will *not* be running simultaneously with them. To minimize check time, Apgar runs the check scripts in parallel as soon as it finds them.
-* Checks should be fast - since apgar will run all the checks in parallel, it is better to have 3 separate tests that each run in N seconds than one test that runs in 3N seconds.
+* The check should never print anything else unless `--verbose` is passed on the command line. If called with `--quiet`, it may print nothing at all, but _must still return zero or non-zero._
+* Check scripts _must not assume that they will be run in a particular order_, or that other check scripts will *not* be running simultaneously with them. To minimize check time, `apgar` runs the check scripts in parallel as soon as it finds them.
+* Checks should be fast - since `apgar` will run all the checks in parallel, it is better to have 3 separate tests that each run in N seconds than one test that runs in 3N seconds.
 * Checks should be idempotent
 * Checks must be non-destructive and not change the state of the underlying service - by definition, they will be run while the service they're checking is in production.
 
@@ -36,7 +36,7 @@ An apgar health check must be:
 
 ## Why Apgar?
 
-Virginia Apgar invented the Apgar score as a method to quickly summarize the health of newborn children. Seemed like an appropriate name for a quick health check system.
+Virginia Apgar invented the Apgar score as a method to quickly summarize the health of newborn children. This seemed like an appropriate name for a quick health check system.
 
 ## Can I run one test at a time?
 
@@ -44,7 +44,7 @@ No. Apgar is designed to run all the health check scripts it finds in parallel. 
 
 ## My scripts have to be run in a particular order, how do I specify that?
 
-You don't. The current work around is to have a single large check script that runs multiple tests in the order you want, but that will slow down the apgar run.
+You don't. The official work around is to have a single large check script that runs multiple tests in the order you want, but that will slow down the apgar run.
 
 ## Why do you run your own web server instead of piggybacking on a system's existing web server?
 
@@ -54,6 +54,7 @@ You are of course free to use your own webserver instead of `apgar-server`, but 
 * Not every system already has a webserver installed
 * Using a standalone server helps minimize Apgar's impact on existing services. Both `apgar-server` and `apgar-probe` are written in golang so that using Apgar doesn't pull in any dependencies that might conflict with those needed by the services you actually care about on a system.
 * Using a standalone server keeps you from having to alter your existing webserver's configuration to use Apgar.
+* Our server is deliberately minimal. All it does is serve up files. It doesn't act on user input, so it can't be exploited by malformed user input.
 
 ## Why Go?
 
