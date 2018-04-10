@@ -99,6 +99,7 @@ task :fmt do
 end
 
 task :c => [:cleanup]
+task :clean => [:cleanup]
 task :f => [:fmt]
 task :t => [:test]
 task :v => [:verbose_test]
