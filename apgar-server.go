@@ -33,21 +33,21 @@ package main
 
 import (
 	"fmt"
+	"github.com/BurntSushi/toml"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
-	"github.com/BurntSushi/toml"
 )
 
 type Tomlmap struct {
-  Webserver webserver
+	Webserver webserver
 }
 
 type webserver struct {
-	Ipaddress  string
-	Port  string
+	Ipaddress string
+	Port      string
 }
 
 func main() {
@@ -63,11 +63,11 @@ func main() {
 	}
 	webserverIP := conf.Webserver.Ipaddress
 	webserverPort := conf.Webserver.Port
-		if len(strings.TrimSpace(webserverIP)) == 0 {
-	 webserverIP = ""
+	if len(strings.TrimSpace(webserverIP)) == 0 {
+		webserverIP = ""
 	}
 	if len(strings.TrimSpace(webserverPort)) == 0 {
-	webserverPort = "9000"
+		webserverPort = "9000"
 	}
 	listenAddress := fmt.Sprintf("%s:%s", webserverIP, webserverPort)
 	http.HandleFunc("/status", healthCheck)
