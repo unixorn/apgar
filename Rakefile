@@ -58,6 +58,7 @@ task :fakeroot => [:apgar_binaries] do
   FileUtils::mkdir_p '.fakeroot/usr/local/sbin'
   FileUtils::mkdir_p '.fakeroot/var/lib/apgar'
   sh %{ cp apgar-probe apgar-server .fakeroot/usr/local/sbin}
+  sh %{ cp config.toml .fakeroot/etc/apgar}
 end
 
 task :apgar_probe do

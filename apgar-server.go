@@ -33,6 +33,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/BurntSushi/toml"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -40,16 +41,38 @@ import (
 	"strings"
 )
 
+type Tomlmap struct {
+	Webserver webserver
+}
+
+type webserver struct {
+	Ipaddress string
+	Port      string
+}
+
 func main() {
 	raw := os.Getpid()
 	myPid := []byte(strconv.Itoa(raw))
+	var conf Tomlmap
 	err := ioutil.WriteFile("/var/run/apgar-server.pid", myPid, 0644)
 	if err != nil {
 		fmt.Println("Could not write /var/run/apgar-server.pid:", err)
 	}
+	if _, err := toml.DecodeFile("/etc/apgar/config.toml", &conf); err != nil {
+		fmt.Println("Could not open /etc/apgar/config.toml fallback to defaults", err)
+	}
+	webserverIP := conf.Webserver.Ipaddress
+	webserverPort := conf.Webserver.Port
+	if len(strings.TrimSpace(webserverIP)) == 0 {
+		webserverIP = ""
+	}
+	if len(strings.TrimSpace(webserverPort)) == 0 {
+		webserverPort = "9000"
+	}
+	listenAddress := fmt.Sprintf("%s:%s", webserverIP, webserverPort)
 	http.HandleFunc("/status", healthCheck)
 	http.HandleFunc("/", baseHandler)
-	http.ListenAndServe(":9000", nil)
+	http.ListenAndServe(listenAddress, nil)
 }
 
 // Handy to allow our services to display scrapable data by writing to
