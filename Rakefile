@@ -61,11 +61,15 @@ task :fakeroot => [:apgar_binaries] do
   sh %{ cp config.toml .fakeroot/etc/apgar}
 end
 
+task :install_build_dependencies do
+  sh %{ go get github.com/BurntSushi/toml }
+end
+
 task :apgar_probe do
   sh %{ go build apgar-probe.go }
 end
 
-task :apgar_server do
+task :apgar_server => [:install_build_dependencies] do
   sh %{ go build apgar-server.go }
 end
 
@@ -95,6 +99,7 @@ task :fmt do
 end
 
 task :c => [:cleanup]
+task :clean => [:cleanup]
 task :f => [:fmt]
 task :t => [:test]
 task :v => [:verbose_test]
