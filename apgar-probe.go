@@ -1,7 +1,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2016 Daqri, LLC
+// Copyright (c) 2016 Daqri, LLC, 2017-2020 Joe Block
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
-// Author: Joe Block <joe.block@daqri.com>
+// Author: Joe Block <jpb@unixorn.net>
 
 package main
 

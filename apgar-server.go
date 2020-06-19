@@ -1,6 +1,6 @@
 // apgar-server
 //
-// Author: Joe Block <joe.block@daqri.com>
+// Author: Joe Block <jpb@unixorn.net>
 //
 // Extremely minimalist http server to serve health check status. We don't
 // need or want any fancy url rewriting, cgis, just to serve up a directory
@@ -8,7 +8,7 @@
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2016 Daqri, LLC
+// Copyright (c) 2016 Daqri, LLC, 2017-2020 Joe Block
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
