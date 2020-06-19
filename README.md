@@ -26,7 +26,7 @@ An apgar health check must be:
 * Executable, with a shebang line.
 * It should either exit 0 if the check pases, or exit with anything other than 0. Note that `apgar-probe` relies on the exit code of the check to determine OK/FAIL, _not_ any text output of the health check script.
 * It must be named with a **.healthCheck** suffix
-* The check should never print anything else unless `--verbose` is passed on the command line. If called with `--quiet`, it may print nothing at all, but _must still return zero or non-zero._
+* The check should never print anything else unless `--verbose` is passed on the command line. If called with `--quiet`, it may print nothing at all, but _must still exit zero or non-zero._
 * To minimize check time, `apgar-probe` walks the healthchecks directory and immediately runs any check scripts it finds in parallel as soon as it finds them, so check scripts _must not assume that they will be run in a particular order_, or that other check scripts will *not* be running simultaneously with them.
 * Checks should be fast - since `apgar-probe` will run all the checks in parallel, it is better to have 3 separate tests that each run in N milliseconds than one test that runs in 3N milliseconds.
 * Checks should be idempotent
@@ -34,7 +34,7 @@ An apgar health check must be:
 
 # Packaging
 
-To make it easy to install on both Debian and CentOS based systems, The included Rakefile can build both deb and rpm files - `rake deb` will build a deb file, and `rake rpm` will build a rpm file. This requires `rake` and `bundler`, but only on your build machine, not on machines you're going to install Apgar on.
+To make it easy to install on both Debian and CentOS based systems, the included `Rakefile` can build both deb and rpm files - `rake deb` will build a deb file, and `rake rpm` will build a rpm file. This requires `rake` and `bundler`, but only on your build machine, not on machines you're going to install Apgar on.
 
 # FAQ
 
