@@ -2,8 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     ansi (1.5.0)
-    arr-pm (0.0.10)
-      cabin (> 0)
+    arr-pm (0.0.12)
     backports (3.17.2)
     builder (3.2.4)
     cabin (0.9.0)
